@@ -278,7 +278,122 @@ class Details extends StatelessWidget {
                                             fontWeight: FontWeight.bold
                                         ),
                                       ),
-                                    )
+                                    ),
+                                    SizedBox.fromSize(size: Size(20, 50)),
+                                    Container(
+                                        padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                        decoration: BoxDecoration(
+                                            color: Color(0xfff1f3f5),
+                                            border: Border.all(
+                                              color: Color(0xfff1f3f5),
+                                            ),
+                                            borderRadius: BorderRadius.all(Radius.circular(8))
+                                        ),
+                                        child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Text(
+                                                'ORÇAMENTO: ',
+                                                style: TextStyle(
+                                                    color: Color(0xff868e96),
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold
+                                                ),
+                                              ),
+                                              Text(
+                                                '\$ ${snapshot.data.budget}',
+                                                style: TextStyle(
+                                                    color: Color(0xff343a40),
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold
+                                                ),
+                                              )
+                                            ]
+                                        )
+                                    ),
+                                    SizedBox.fromSize(size: Size(20, 5)),
+                                    Container(
+                                        padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                        decoration: BoxDecoration(
+                                            color: Color(0xfff1f3f5),
+                                            border: Border.all(
+                                              color: Color(0xfff1f3f5),
+                                            ),
+                                            borderRadius: BorderRadius.all(Radius.circular(8))
+                                        ),
+                                        child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Text(
+                                                'PRODUTORAS: ',
+                                                style: TextStyle(
+                                                    color: Color(0xff868e96),
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold
+                                                ),
+                                              ),
+                                              Text(
+                                                '${snapshot.data.productionCompaniesLabel}',
+                                                style: TextStyle(
+                                                    color: Color(0xff343a40),
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold
+                                                ),
+                                              )
+                                            ]
+                                        )
+                                    ),
+                                    SizedBox.fromSize(size: Size(20, 50)),
+                                    Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: Text(
+                                        'Diretor',
+                                        style: TextStyle(
+                                          color: Colors.blueGrey,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Align(
+                                          alignment: Alignment.bottomLeft,
+                                          child: Text(
+                                            snapshot.data.director,
+                                            style: TextStyle(
+                                                color: Colors.grey[700],
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          )
+                                      ),
+                                    ),
+                                    SizedBox.fromSize(size: Size(20, 50)),
+                                    Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: Text(
+                                        'Elenco',
+                                        style: TextStyle(
+                                          color: Colors.blueGrey,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Align(
+                                          alignment: Alignment.bottomLeft,
+                                          child: Text(
+                                            snapshot.data.director,
+                                            style: TextStyle(
+                                                color: Colors.grey[700],
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          )
+                                      ),
+                                    ),
+                                    SizedBox.fromSize(size: Size(20, 50)),
                                   ],
                                 )
                             )

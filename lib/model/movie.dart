@@ -22,7 +22,9 @@ class Movie {
 
   List<ProductionCompany> _productionCompanies;
 
-  int _revenue;
+  int _budget;
+
+  String _director;
 
   Movie.fromMap(Map<String, dynamic> map) {
     _id = map['id'];
@@ -40,6 +42,7 @@ class Movie {
     _originalTitle = map['original_title'];
     _voteAverage = map['vote_average'].toString();
     _releaseDate = map['release_date'];
+    _budget = map['budget'];
 
     if (map.containsKey('production_companies')) {
       _productionCompanies = List();
@@ -50,6 +53,7 @@ class Movie {
     }
 
     _overview = map['overview'];
+    _director = 'Nome do Diretor';
   }
 
   int get id => _id;
@@ -66,10 +70,10 @@ class Movie {
 
   String get originalTitle => _originalTitle;
 
-  int get revenue => _revenue;
+  int get budget => _budget;
 
-  set revenue(int value) {
-    _revenue = value;
+  set budget(int value) {
+    _budget = value;
   }
 
   List<ProductionCompany> get productionCompanies => _productionCompanies;
@@ -110,6 +114,12 @@ class Movie {
 
   set originalTitle(String value) {
     _originalTitle = value;
+  }
+
+  String get director => _director;
+
+  set director(String value) {
+    _director = value;
   }
 
   String get genresLabel {
