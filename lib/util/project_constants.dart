@@ -1,0 +1,5 @@
+String apiKey = '23b53de489b329a894ceb74dc49f64c1';
+
+String apiReadToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyM2I1M2RlNDg5YjMyOWE4OTRjZWI3NGRjNDlmNjRjMSIsInN1YiI6IjYwMmZjYzMyZDAzNmI2MDA0MjczODA0MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.yt41eTk1agaM-1kEQPe5Ek0aR7X9VT9kMbOkvz0UiIg';
+
+String apiDefaultRequisitionUrl = 'https://api.themoviedb.org/3/search/movie?api_key=23b53de489b329a894ceb74dc49f64c1&language=pt-BR&query=matrix';
