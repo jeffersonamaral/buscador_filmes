@@ -188,13 +188,19 @@ class Movie {
   }
 
   String get theatricalReleaseDateLabel {
-    initializeDateFormatting();
-    DateFormat formatter = DateFormat('yyyy-MM-dd');
-    DateTime dateTime = formatter.parse(_theatricalReleaseDate);
-    DateFormat labelFormatterDay = DateFormat('dd', 'pt-BR');
-    DateFormat labelFormatterMonth = DateFormat('MMMM', 'pt-BR');
+    String label;
 
-    return labelFormatterDay.format(dateTime) + ' de ' + labelFormatterMonth.format(dateTime);
+    if (_theatricalReleaseDate != null && _theatricalReleaseDate.isNotEmpty) {
+      initializeDateFormatting();
+      DateFormat formatter = DateFormat('yyyy-MM-dd');
+      DateTime dateTime = formatter.parse(_theatricalReleaseDate);
+      DateFormat labelFormatterDay = DateFormat('dd', 'pt-BR');
+      DateFormat labelFormatterMonth = DateFormat('MMMM', 'pt-BR');
+
+      label = labelFormatterDay.format(dateTime) + ' de ' + labelFormatterMonth.format(dateTime);
+    }
+
+    return label;
   }
 
 }

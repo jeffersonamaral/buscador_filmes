@@ -181,7 +181,9 @@ class Details extends StatelessWidget {
                                               child: Align(
                                                 alignment: Alignment.bottomCenter,
                                                 child: Text(
-                                                  '${snapshot.data.theatricalReleaseDateLabel.toUpperCase()} NOS CINEMAS',
+                                                    snapshot.data.theatricalReleaseDateLabel != null
+                                                        ? '${snapshot.data.theatricalReleaseDateLabel.toUpperCase()} NOS CINEMAS'
+                                                        : '',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                       color: Colors.yellow,
@@ -329,14 +331,19 @@ class Details extends StatelessWidget {
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(top: 10),
-                                        child: Text(
-                                          snapshot.data.overview,
-                                          style: TextStyle(
-                                              color: Colors.grey[700],
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
+                                        child: Align(
+                                          alignment: Alignment.bottomLeft,
+                                          child: Text(
+                                            snapshot.data.overview != null && snapshot.data.overview.isNotEmpty
+                                                ? snapshot.data.overview
+                                                : 'Indisponível',
+                                            style: TextStyle(
+                                                color: Colors.grey[700],
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          )
+                                        )
                                       ),
                                       SizedBox.fromSize(size: Size(20, 50)),
                                       Container(
