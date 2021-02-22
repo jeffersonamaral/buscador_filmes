@@ -9,3 +9,5 @@ const String searchGenresUrl = 'https://api.themoviedb.org/3/genre/movie/list?ap
 const String searchDetailsUrl = 'https://api.themoviedb.org/3/movie/';
 
 const String searchCreditsUrl = 'https://api.themoviedb.org/3/movie/';
+
+const String searchReleaseDatesUrl = 'https://api.themoviedb.org/3/movie/';

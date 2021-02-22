@@ -21,7 +21,7 @@ class Details extends StatelessWidget {
   Future<Movie> _searchMovieDetails(Movie movie) async {
     Movie detailedMovie;
 
-    var url = '${searchDetailsUrl + movie.id.toString()}?api_key=23b53de489b329a894ceb74dc49f64c1&language=pt-BR';
+    var url = '${searchDetailsUrl + movie.id.toString()}?api_key=$apiKey&language=pt-BR';
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -29,18 +29,44 @@ class Details extends StatelessWidget {
 
       detailedMovie = Movie.fromMap(jsonResponse);
 
-      var urlCredits = '${searchCreditsUrl + movie.id.toString()}/credits?api_key=23b53de489b329a894ceb74dc49f64c1&language=pt-BR';
+      var urlCredits = '${searchCreditsUrl + movie.id.toString()}/credits?api_key=$apiKey';
       var responseCredits = await http.get(urlCredits);
 
       if (responseCredits.statusCode == 200) {
         var jsonResponseCredits = json.decode(responseCredits.body);
 
-        for (Map<String, dynamic> aux in jsonResponseCredits['cast']) {
-          detailedMovie.cast.add(Cast.fromMap(aux));
+        for (Map<String, dynamic> auxCast in jsonResponseCredits['cast']) {
+          detailedMovie.cast.add(Cast.fromMap(auxCast));
         }
 
-        for (Map<String, dynamic> aux in jsonResponseCredits['crew']) {
-          detailedMovie.crew.add(Crew.fromMap(aux));
+        for (Map<String, dynamic> auxCrew in jsonResponseCredits['crew']) {
+          detailedMovie.crew.add(Crew.fromMap(auxCrew));
+        }
+
+        var urlReleaseDates = '${searchCreditsUrl + movie.id.toString()}/release_dates?api_key=$apiKey';
+        var responseReleaseDates = await http.get(urlReleaseDates);
+
+        if (responseReleaseDates.statusCode == 200) {
+          var jsonResponseReleaseDates = json.decode(responseReleaseDates.body);
+
+          for (Map<String, dynamic> auxReleaseDates in jsonResponseReleaseDates['results']) {
+            if (auxReleaseDates['iso_3166_1'] == 'BR') {
+              for (Map<String, dynamic> aux in auxReleaseDates['release_dates']) {
+                // Testando se a release_date é para os cinemas
+                if (aux['type'] == 3) {
+                  detailedMovie.theatricalReleaseDate = aux['release_date'];
+
+                  if (detailedMovie.theatricalReleaseDate?.isNotEmpty) {
+                    detailedMovie.theatricalReleaseDate = detailedMovie.theatricalReleaseDate.substring(0, 10);
+                  }
+
+                  break;
+                }
+              }
+            }
+          }
+        } else {
+          print('Request failed with status: ${responseReleaseDates.statusCode}.');
         }
       } else {
         print('Request failed with status: ${responseCredits.statusCode}.');
@@ -144,15 +170,21 @@ class Details extends StatelessWidget {
                                               ),
                                             )
                                         ),
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Text(
-                                            'NOS CINEMAS',
-                                            style: TextStyle(
-                                                color: Colors.yellow,
-                                                fontWeight: FontWeight.bold
-                                            ),
-                                          ),
+                                        Positioned(
+                                            width: MediaQuery.of(context).size.width * 0.9,
+                                            bottom: 10,
+                                            child: Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: Text(
+                                                '${snapshot.data.theatricalReleaseDateLabel.toUpperCase()} NOS CINEMAS',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Colors.yellow,
+                                                    fontSize: 8,
+                                                    fontWeight: FontWeight.bold
+                                                ),
+                                              ),
+                                            )
                                         ),
                                       ],
                                     ),
@@ -201,8 +233,11 @@ class Details extends StatelessWidget {
                                           ),
                                         )
                                     ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                    Wrap(
+                                      crossAxisAlignment: WrapCrossAlignment.center,
+                                      runSpacing: 10,
+                                      spacing: 10,
+                                      alignment: WrapAlignment.center,
                                       children: [
                                         Container(
                                           padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -214,6 +249,7 @@ class Details extends StatelessWidget {
                                               borderRadius: BorderRadius.all(Radius.circular(8))
                                           ),
                                           child: Row(
+                                            mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Text(
                                                 'Ano: ',
@@ -224,7 +260,7 @@ class Details extends StatelessWidget {
                                                 ),
                                               ),
                                               Text(
-                                                snapshot.data.year,
+                                                snapshot.data.yearLabel,
                                                 style: TextStyle(
                                                     color: Color(0xff343a40),
                                                     fontSize: 20,
@@ -234,7 +270,6 @@ class Details extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        SizedBox.fromSize(size: Size(20, 20)),
                                         Container(
                                           padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                                           decoration: BoxDecoration(
@@ -245,6 +280,7 @@ class Details extends StatelessWidget {
                                               borderRadius: BorderRadius.all(Radius.circular(8))
                                           ),
                                           child: Row(
+                                            mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Text(
                                                 'Duração: ',
@@ -255,7 +291,7 @@ class Details extends StatelessWidget {
                                                 ),
                                               ),
                                               Text(
-                                                '1h 20 min',
+                                                snapshot.data.durationLabel,
                                                 style: TextStyle(
                                                     color: Color(0xff343a40),
                                                     fontSize: 20,
@@ -319,7 +355,7 @@ class Details extends StatelessWidget {
                                                 ),
                                               ),
                                               Text(
-                                                '\$ ${snapshot.data.budget}',
+                                                snapshot.data.budgetLabel,
                                                 style: TextStyle(
                                                     color: Color(0xff343a40),
                                                     fontSize: 20,

@@ -1,4 +1,6 @@
 import 'package:buscador_filmes/model/production_company.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 import 'cast.dart';
 import 'crew.dart';
@@ -26,18 +28,22 @@ class Movie {
 
   int _budget;
 
+  int _runtime;
+
   List<Crew> _crew;
 
   List<Cast> _cast;
+
+  String _theatricalReleaseDate;
 
   Movie.fromMap(Map<String, dynamic> map) {
     _id = map['id'];
     _title = map['title'];
     _posterPath = map['poster_path'];
 
-    if (map.containsKey('genres')) {
-      _genres = List();
+    _genres = List();
 
+    if (map.containsKey('genres')) {
       for (Map<String, dynamic> aux in map['genres']) {
         _genres.add(Genre(aux['id'], aux['name']));
       }
@@ -48,94 +54,54 @@ class Movie {
     _releaseDate = map['release_date'];
     _budget = map['budget'];
 
-    if (map.containsKey('production_companies')) {
-      _productionCompanies = List();
+    _productionCompanies = List();
 
+    if (map.containsKey('production_companies')) {
       for (Map<String, dynamic>  aux in map['production_companies']) {
         _productionCompanies.add(ProductionCompany.fromMap(aux));
       }
     }
 
+    _runtime = map['runtime'];
     _overview = map['overview'];
     _cast = List();
     _crew = List();
   }
 
-
   int get id => _id;
-
-  set id(int value) {
-    _id = value;
-  }
-
-  String get year {
-    return _releaseDate.substring(0, 4);
-  }
 
   String get title => _title;
 
-  set title(String value) {
-    _title = value;
-  }
-
   String get originalTitle => _originalTitle;
-
-  set originalTitle(String value) {
-    _originalTitle = value;
-  }
 
   String get posterPath => _posterPath;
 
-  set posterPath(String value) {
-    _posterPath = value;
-  }
-
   List<Genre> get genres => _genres;
-
-  set genres(List<Genre> value) {
-    _genres = value;
-  }
 
   String get voteAverage => _voteAverage;
 
-  set voteAverage(String value) {
-    _voteAverage = value;
-  }
-
   String get releaseDate => _releaseDate;
-
-  set releaseDate(String value) {
-    _releaseDate = value;
-  }
 
   String get overview => _overview;
 
-  set overview(String value) {
-    _overview = value;
-  }
-
   List<ProductionCompany> get productionCompanies => _productionCompanies;
-
-  set productionCompanies(List<ProductionCompany> value) {
-    _productionCompanies = value;
-  }
 
   int get budget => _budget;
 
-  set budget(int value) {
-    _budget = value;
-  }
+  int get runtime => _runtime;
 
   List<Crew> get crew => _crew;
 
-  set crew(List<Crew> value) {
-    _crew = value;
-  }
-
   List<Cast> get cast => _cast;
 
-  set cast(List<Cast> value) {
-    _cast = value;
+  String get theatricalReleaseDate => _theatricalReleaseDate;
+
+  set theatricalReleaseDate(String value) {
+    _theatricalReleaseDate = value;
+  }
+
+  String get yearLabel {
+    return _releaseDate.substring(0, 4);
   }
 
   String get genresLabel {
@@ -197,4 +163,38 @@ class Movie {
 
     return label;
   }
+
+  String get durationLabel {
+    int hours = _runtime ~/ 60;
+    int minutes = (_runtime - (hours * 60));
+
+    return '${hours}h $minutes min';
+  }
+
+  String get budgetLabel {
+    String label;
+
+    if (_budget != null && _budget != 0) {
+      label = NumberFormat.currency(
+        decimalDigits: 0,
+        locale: 'en-US',
+        symbol: '\$'
+      ).format(_budget);
+    } else {
+      label = 'Indisponível';
+    }
+
+    return label;
+  }
+
+  String get theatricalReleaseDateLabel {
+    initializeDateFormatting();
+    DateFormat formatter = DateFormat('yyyy-MM-dd');
+    DateTime dateTime = formatter.parse(_theatricalReleaseDate);
+    DateFormat labelFormatterDay = DateFormat('dd', 'pt-BR');
+    DateFormat labelFormatterMonth = DateFormat('MMMM', 'pt-BR');
+
+    return labelFormatterDay.format(dateTime) + ' de ' + labelFormatterMonth.format(dateTime);
+  }
+
 }

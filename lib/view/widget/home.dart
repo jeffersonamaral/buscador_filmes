@@ -44,7 +44,6 @@ class _HomeState extends State<Home> {
       for (Map<String, dynamic> mapMovie in jsonResponse['results']) {
         setState(() {
           movie = Movie.fromMap(mapMovie);
-          movie.genres = List();
 
           for (int genreId in mapMovie['genre_ids']) {
             for (Genre genre in _genres) {
