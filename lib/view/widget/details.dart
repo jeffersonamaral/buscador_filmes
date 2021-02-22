@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:buscador_filmes/model/cast.dart';
+import 'package:buscador_filmes/model/crew.dart';
 import 'package:buscador_filmes/model/genre.dart';
 import 'package:buscador_filmes/model/movie.dart';
+import 'package:buscador_filmes/util/project_constants.dart';
 import 'package:buscador_filmes/view/widget/please_wait.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -18,15 +21,30 @@ class Details extends StatelessWidget {
   Future<Movie> _searchMovieDetails(Movie movie) async {
     Movie detailedMovie;
 
-    var url = 'https://api.themoviedb.org/3/movie/${movie.id}?api_key=23b53de489b329a894ceb74dc49f64c1&language=pt-BR';
+    var url = '${searchDetailsUrl + movie.id.toString()}?api_key=23b53de489b329a894ceb74dc49f64c1&language=pt-BR';
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
-      Movie movie;
-      List<Movie> tempMovies = List();
       var jsonResponse = json.decode(response.body);
 
       detailedMovie = Movie.fromMap(jsonResponse);
+
+      var urlCredits = '${searchCreditsUrl + movie.id.toString()}/credits?api_key=23b53de489b329a894ceb74dc49f64c1&language=pt-BR';
+      var responseCredits = await http.get(urlCredits);
+
+      if (responseCredits.statusCode == 200) {
+        var jsonResponseCredits = json.decode(responseCredits.body);
+
+        for (Map<String, dynamic> aux in jsonResponseCredits['cast']) {
+          detailedMovie.cast.add(Cast.fromMap(aux));
+        }
+
+        for (Map<String, dynamic> aux in jsonResponseCredits['crew']) {
+          detailedMovie.crew.add(Crew.fromMap(aux));
+        }
+      } else {
+        print('Request failed with status: ${responseCredits.statusCode}.');
+      }
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
@@ -359,7 +377,7 @@ class Details extends StatelessWidget {
                                       child: Align(
                                           alignment: Alignment.bottomLeft,
                                           child: Text(
-                                            snapshot.data.director,
+                                            snapshot.data.directorLabel,
                                             style: TextStyle(
                                                 color: Colors.grey[700],
                                                 fontSize: 18,
@@ -384,7 +402,7 @@ class Details extends StatelessWidget {
                                       child: Align(
                                           alignment: Alignment.bottomLeft,
                                           child: Text(
-                                            snapshot.data.director,
+                                            snapshot.data.castLabel,
                                             style: TextStyle(
                                                 color: Colors.grey[700],
                                                 fontSize: 18,

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:buscador_filmes/model/genre.dart';
 import 'package:buscador_filmes/model/movie.dart';
 import 'package:buscador_filmes/util/route_generator.dart';
+import 'package:buscador_filmes/util/project_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -32,7 +33,7 @@ class _HomeState extends State<Home> {
       return _movies;
     }
 
-    var url = 'https://api.themoviedb.org/3/search/movie?api_key=23b53de489b329a894ceb74dc49f64c1&language=pt-BR&query=$value';
+    var url = searchMoviesUrl + value;
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -65,7 +66,7 @@ class _HomeState extends State<Home> {
   }
 
   void _searchGenres() async {
-    var url = 'https://api.themoviedb.org/3/genre/movie/list?api_key=23b53de489b329a894ceb74dc49f64c1&language=pt-BR';
+    var url = searchGenresUrl;
     var response = await http.get(url);
 
     if (response.statusCode == 200) {

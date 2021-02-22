@@ -1,5 +1,7 @@
 import 'package:buscador_filmes/model/production_company.dart';
 
+import 'cast.dart';
+import 'crew.dart';
 import 'genre.dart';
 
 class Movie {
@@ -24,7 +26,9 @@ class Movie {
 
   int _budget;
 
-  String _director;
+  List<Crew> _crew;
+
+  List<Cast> _cast;
 
   Movie.fromMap(Map<String, dynamic> map) {
     _id = map['id'];
@@ -53,13 +57,19 @@ class Movie {
     }
 
     _overview = map['overview'];
-    _director = 'Nome do Diretor';
+    _cast = List();
+    _crew = List();
   }
+
 
   int get id => _id;
 
   set id(int value) {
     _id = value;
+  }
+
+  String get year {
+    return _releaseDate.substring(0, 4);
   }
 
   String get title => _title;
@@ -70,40 +80,8 @@ class Movie {
 
   String get originalTitle => _originalTitle;
 
-  int get budget => _budget;
-
-  set budget(int value) {
-    _budget = value;
-  }
-
-  List<ProductionCompany> get productionCompanies => _productionCompanies;
-
-  set productionCompanies(List<ProductionCompany> value) {
-    _productionCompanies = value;
-  }
-
-  String get overview => _overview;
-
-  set overview(String value) {
-    _overview = value;
-  }
-
-  String get releaseDate => _releaseDate;
-
-  set releaseDate(String value) {
-    _releaseDate = value;
-  }
-
-  String get voteAverage => _voteAverage;
-
-  set voteAverage(String value) {
-    _voteAverage = value;
-  }
-
-  List<Genre> get genres => _genres;
-
-  set genres(List<Genre> value) {
-    _genres = value;
+  set originalTitle(String value) {
+    _originalTitle = value;
   }
 
   String get posterPath => _posterPath;
@@ -112,14 +90,52 @@ class Movie {
     _posterPath = value;
   }
 
-  set originalTitle(String value) {
-    _originalTitle = value;
+  List<Genre> get genres => _genres;
+
+  set genres(List<Genre> value) {
+    _genres = value;
   }
 
-  String get director => _director;
+  String get voteAverage => _voteAverage;
 
-  set director(String value) {
-    _director = value;
+  set voteAverage(String value) {
+    _voteAverage = value;
+  }
+
+  String get releaseDate => _releaseDate;
+
+  set releaseDate(String value) {
+    _releaseDate = value;
+  }
+
+  String get overview => _overview;
+
+  set overview(String value) {
+    _overview = value;
+  }
+
+  List<ProductionCompany> get productionCompanies => _productionCompanies;
+
+  set productionCompanies(List<ProductionCompany> value) {
+    _productionCompanies = value;
+  }
+
+  int get budget => _budget;
+
+  set budget(int value) {
+    _budget = value;
+  }
+
+  List<Crew> get crew => _crew;
+
+  set crew(List<Crew> value) {
+    _crew = value;
+  }
+
+  List<Cast> get cast => _cast;
+
+  set cast(List<Cast> value) {
+    _cast = value;
   }
 
   String get genresLabel {
@@ -129,7 +145,9 @@ class Movie {
       label += '${genre.name} - ';
     }
 
-    label = label.substring(0, (label.length - 1) - 2);
+    if (label.isNotEmpty) {
+      label = label.substring(0, (label.length - 1) - 2);
+    }
 
     return label;
   }
@@ -141,13 +159,42 @@ class Movie {
       label += '${productionCompany.name} - ';
     }
 
-    label = label.substring(0, (label.length - 1) - 2);
+    if (label.isNotEmpty) {
+      label = label.substring(0, (label.length - 1) - 2);
+    }
 
     return label;
   }
 
-  String get year {
-    return _releaseDate.substring(0, 4);
+  String get castLabel {
+    String label = '';
+
+    for (Cast cast in _cast) {
+      if (cast.order <= 6) {
+        label += '${cast.name}, ';
+      }
+    }
+
+    if (label.isNotEmpty) {
+      label = label.substring(0, (label.length - 1) - 1);
+    }
+
+    return label;
   }
 
+  String get directorLabel {
+    String label = '';
+
+    for (Crew crew in _crew) {
+      if (crew.job == 'Director') {
+        label += '${crew.name}, ';
+      }
+    }
+
+    if (label.isNotEmpty) {
+      label = label.substring(0, (label.length - 1) - 1);
+    }
+
+    return label;
+  }
 }
