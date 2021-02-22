@@ -56,7 +56,7 @@ class Details extends StatelessWidget {
                 if (aux['type'] == 3) {
                   detailedMovie.theatricalReleaseDate = aux['release_date'];
 
-                  if (detailedMovie.theatricalReleaseDate?.isNotEmpty) {
+                  if (detailedMovie.theatricalReleaseDate != null && detailedMovie.theatricalReleaseDate?.isNotEmpty) {
                     detailedMovie.theatricalReleaseDate = detailedMovie.theatricalReleaseDate.substring(0, 10);
                   }
 
@@ -109,137 +109,237 @@ class Details extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-          floatingActionButton: Padding(
-              padding: EdgeInsets.only(top: 30),
-              child: FloatingActionButton.extended(
-                onPressed: () => Navigator.of(context).pop(),
-                elevation: 0,
-                backgroundColor: Colors.white,
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: Color(0xff6d7070),
+    return Scaffold(
+        floatingActionButton: Padding(
+            padding: EdgeInsets.only(top: 30),
+            child: FloatingActionButton.extended(
+              onPressed: () => Navigator.of(context).pop(),
+              elevation: 0,
+              backgroundColor: Colors.white,
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Color(0xff6d7070),
+              ),
+              label: Text(
+                'Voltar',
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Color(0xff6d7070)
                 ),
-                label: Text(
-                  'Voltar',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xff6d7070)
-                  ),
-                ),
-              )),
-          floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-          body: FutureBuilder<Movie>(
-            future: _searchMovieDetails(_movie),
-            builder: (context, snapshot) {
-              Widget result;
+              ),
+            )),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+        body: FutureBuilder<Movie>(
+          future: _searchMovieDetails(_movie),
+          builder: (context, snapshot) {
+            Widget result;
 
-              switch (snapshot.connectionState){
-                case ConnectionState.none:
-                case ConnectionState.waiting:
-                  result = PleaseWait();
+            switch (snapshot.connectionState){
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+                result = PleaseWait();
 
-                  break;
+                break;
 
-                case ConnectionState.active:
-                case ConnectionState.done:
-                  if (snapshot.hasError) {
-                    result = ErrorMessage();
-                  } else {
-                    result = SingleChildScrollView(
-                        child: Container(
-                            padding: EdgeInsets.only(left: 25, right: 25),
-                            color: Colors.white, //Color(0xfff5f5f5),
-                            width: MediaQuery.of(context).size.width,
-                            child: Container(
-                                padding: EdgeInsets.only(top: 180),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Stack(
-                                      children: [
-                                        Align(
-                                            alignment: Alignment.center,
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(16),
-                                              child: Image.network(
-                                                _posterBaseUrl + snapshot.data.posterPath,
-                                                width: MediaQuery.of(context).size.width * 0.6,
-                                              ),
-                                            )
-                                        ),
-                                        Positioned(
-                                            width: MediaQuery.of(context).size.width * 0.9,
-                                            bottom: 10,
-                                            child: Align(
-                                              alignment: Alignment.bottomCenter,
-                                              child: Text(
-                                                '${snapshot.data.theatricalReleaseDateLabel.toUpperCase()} NOS CINEMAS',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Colors.yellow,
-                                                    fontSize: 8,
-                                                    fontWeight: FontWeight.bold
-                                                ),
-                                              ),
-                                            )
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 40, bottom: 40),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+              case ConnectionState.active:
+              case ConnectionState.done:
+                if (snapshot.hasError) {
+                  result = ErrorMessage();
+                } else {
+                  result = Container(
+                      color: Colors.white,
+                      width: MediaQuery.of(context).size.width,
+                      child: SingleChildScrollView(
+                          child: Stack(
+                            children: [
+                              Image.asset(
+                                  'assets/img/details_background.png',
+                                fit: BoxFit.fill,
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height * 0.4,
+                              ),
+                              Container(
+                                  padding: EdgeInsets.only(top: 180, left: 25, right: 25),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Stack(
                                         children: [
-                                          Text(
-                                            snapshot.data.voteAverage,
+                                          Align(
+                                              alignment: Alignment.center,
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(16),
+                                                child: Image.network(
+                                                  _posterBaseUrl + snapshot.data.posterPath,
+                                                  width: MediaQuery.of(context).size.width * 0.6,
+                                                ),
+                                              )
+                                          ),
+                                          Positioned(
+                                              width: MediaQuery.of(context).size.width * 0.9,
+                                              bottom: 10,
+                                              child: Align(
+                                                alignment: Alignment.bottomCenter,
+                                                child: Text(
+                                                  '${snapshot.data.theatricalReleaseDateLabel.toUpperCase()} NOS CINEMAS',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      color: Colors.yellow,
+                                                      fontSize: 8,
+                                                      fontWeight: FontWeight.bold
+                                                  ),
+                                                ),
+                                              )
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 40, bottom: 40),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              snapshot.data.voteAverage,
+                                              style: TextStyle(
+                                                  color: Color(0xff00384c),
+                                                  fontSize: 35,
+                                                  fontWeight: FontWeight.bold
+                                              ),
+                                            ),
+                                            Text(
+                                              ' / 10',
+                                              style: TextStyle(
+                                                  color: Color(0xff868e96),
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Text(
+                                        snapshot.data.title.toUpperCase(),
+                                        style: TextStyle(
+                                            color: Color(0xff00384c),
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Arial'
+                                        ),
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.only(top: 10, bottom: 40),
+                                          child: Text(
+                                            'Título original: ${snapshot.data.originalTitle}',
                                             style: TextStyle(
-                                                color: Color(0xff00384c),
-                                                fontSize: 35,
-                                                fontWeight: FontWeight.bold
+                                                color: Colors.blueGrey,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.normal
+                                            ),
+                                          )
+                                      ),
+                                      Wrap(
+                                        crossAxisAlignment: WrapCrossAlignment.center,
+                                        runSpacing: 10,
+                                        spacing: 10,
+                                        alignment: WrapAlignment.center,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                            decoration: BoxDecoration(
+                                                color: Color(0xfff1f3f5),
+                                                border: Border.all(
+                                                  color: Color(0xfff1f3f5),
+                                                ),
+                                                borderRadius: BorderRadius.all(Radius.circular(8))
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  'Ano: ',
+                                                  style: TextStyle(
+                                                      color: Color(0xff868e96),
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold
+                                                  ),
+                                                ),
+                                                Text(
+                                                  snapshot.data.yearLabel,
+                                                  style: TextStyle(
+                                                      color: Color(0xff343a40),
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold
+                                                  ),
+                                                )
+                                              ],
                                             ),
                                           ),
-                                          Text(
-                                            ' / 10',
-                                            style: TextStyle(
-                                                color: Color(0xff868e96),
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold
+                                          Container(
+                                            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                            decoration: BoxDecoration(
+                                                color: Color(0xfff1f3f5),
+                                                border: Border.all(
+                                                  color: Color(0xfff1f3f5),
+                                                ),
+                                                borderRadius: BorderRadius.all(Radius.circular(8))
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  'Duração: ',
+                                                  style: TextStyle(
+                                                      color: Color(0xff868e96),
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold
+                                                  ),
+                                                ),
+                                                Text(
+                                                  snapshot.data.durationLabel,
+                                                  style: TextStyle(
+                                                      color: Color(0xff343a40),
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold
+                                                  ),
+                                                )
+                                              ],
                                             ),
                                           )
                                         ],
                                       ),
-                                    ),
-                                    Text(
-                                      snapshot.data.title.toUpperCase(),
-                                      style: TextStyle(
-                                          color: Color(0xff00384c),
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Arial'
+                                      SizedBox.fromSize(size: Size(20, 15)),
+                                      Wrap(
+                                        crossAxisAlignment: WrapCrossAlignment.center,
+                                        spacing: 8,
+                                        runSpacing: 8,
+                                        alignment: WrapAlignment.spaceEvenly,
+                                        children: _createGenresRow(snapshot.data),
                                       ),
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.only(top: 10, bottom: 40),
+                                      SizedBox.fromSize(size: Size(20, 75)),
+                                      Align(
+                                        alignment: Alignment.bottomLeft,
                                         child: Text(
-                                          'Título original: ${snapshot.data.originalTitle}',
+                                          'Descrição',
                                           style: TextStyle(
-                                              color: Colors.blueGrey,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal
+                                            color: Colors.blueGrey,
+                                            fontSize: 20,
                                           ),
-                                        )
-                                    ),
-                                    Wrap(
-                                      crossAxisAlignment: WrapCrossAlignment.center,
-                                      runSpacing: 10,
-                                      spacing: 10,
-                                      alignment: WrapAlignment.center,
-                                      children: [
-                                        Container(
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 10),
+                                        child: Text(
+                                          snapshot.data.overview,
+                                          style: TextStyle(
+                                              color: Colors.grey[700],
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox.fromSize(size: Size(20, 50)),
+                                      Container(
                                           padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                                           decoration: BoxDecoration(
                                               color: Color(0xfff1f3f5),
@@ -249,28 +349,29 @@ class Details extends StatelessWidget {
                                               borderRadius: BorderRadius.all(Radius.circular(8))
                                           ),
                                           child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                'Ano: ',
-                                                style: TextStyle(
-                                                    color: Color(0xff868e96),
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Text(
+                                                  'ORÇAMENTO: ',
+                                                  style: TextStyle(
+                                                      color: Color(0xff868e96),
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold
+                                                  ),
                                                 ),
-                                              ),
-                                              Text(
-                                                snapshot.data.yearLabel,
-                                                style: TextStyle(
-                                                    color: Color(0xff343a40),
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
+                                                Text(
+                                                  snapshot.data.budgetLabel,
+                                                  style: TextStyle(
+                                                      color: Color(0xff343a40),
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold
+                                                  ),
+                                                )
+                                              ]
+                                          )
+                                      ),
+                                      SizedBox.fromSize(size: Size(20, 5)),
+                                      Container(
                                           padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                                           decoration: BoxDecoration(
                                               color: Color(0xfff1f3f5),
@@ -280,187 +381,92 @@ class Details extends StatelessWidget {
                                               borderRadius: BorderRadius.all(Radius.circular(8))
                                           ),
                                           child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                'Duração: ',
-                                                style: TextStyle(
-                                                    color: Color(0xff868e96),
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Text(
+                                                  'PRODUTORAS: ',
+                                                  style: TextStyle(
+                                                      color: Color(0xff868e96),
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold
+                                                  ),
                                                 ),
-                                              ),
-                                              Text(
-                                                snapshot.data.durationLabel,
-                                                style: TextStyle(
-                                                    color: Color(0xff343a40),
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold
-                                                ),
-                                              )
-                                            ],
+                                                Text(
+                                                  '${snapshot.data.productionCompaniesLabel}',
+                                                  style: TextStyle(
+                                                      color: Color(0xff343a40),
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold
+                                                  ),
+                                                )
+                                              ]
+                                          )
+                                      ),
+                                      SizedBox.fromSize(size: Size(20, 50)),
+                                      Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Text(
+                                          'Diretor',
+                                          style: TextStyle(
+                                            color: Colors.blueGrey,
+                                            fontSize: 20,
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox.fromSize(size: Size(20, 15)),
-                                    Wrap(
-                                      crossAxisAlignment: WrapCrossAlignment.center,
-                                      spacing: 8,
-                                      runSpacing: 8,
-                                      alignment: WrapAlignment.spaceEvenly,
-                                      children: _createGenresRow(snapshot.data),
-                                    ),
-                                    SizedBox.fromSize(size: Size(20, 75)),
-                                    Align(
-                                      alignment: Alignment.bottomLeft,
-                                      child: Text(
-                                        'Descrição',
-                                        style: TextStyle(
-                                          color: Colors.blueGrey,
-                                          fontSize: 20,
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10),
-                                      child: Text(
-                                        snapshot.data.overview,
-                                        style: TextStyle(
-                                            color: Colors.grey[700],
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox.fromSize(size: Size(20, 50)),
-                                    Container(
-                                        padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                        decoration: BoxDecoration(
-                                            color: Color(0xfff1f3f5),
-                                            border: Border.all(
-                                              color: Color(0xfff1f3f5),
-                                            ),
-                                            borderRadius: BorderRadius.all(Radius.circular(8))
-                                        ),
-                                        child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Text(
-                                                'ORÇAMENTO: ',
-                                                style: TextStyle(
-                                                    color: Color(0xff868e96),
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold
-                                                ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 10),
+                                        child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(
+                                              snapshot.data.directorLabel,
+                                              style: TextStyle(
+                                                  color: Colors.grey[700],
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold
                                               ),
-                                              Text(
-                                                snapshot.data.budgetLabel,
-                                                style: TextStyle(
-                                                    color: Color(0xff343a40),
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold
-                                                ),
-                                              )
-                                            ]
-                                        )
-                                    ),
-                                    SizedBox.fromSize(size: Size(20, 5)),
-                                    Container(
-                                        padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                        decoration: BoxDecoration(
-                                            color: Color(0xfff1f3f5),
-                                            border: Border.all(
-                                              color: Color(0xfff1f3f5),
-                                            ),
-                                            borderRadius: BorderRadius.all(Radius.circular(8))
+                                            )
                                         ),
-                                        child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Text(
-                                                'PRODUTORAS: ',
-                                                style: TextStyle(
-                                                    color: Color(0xff868e96),
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold
-                                                ),
+                                      ),
+                                      SizedBox.fromSize(size: Size(20, 50)),
+                                      Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Text(
+                                          'Elenco',
+                                          style: TextStyle(
+                                            color: Colors.blueGrey,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 10),
+                                        child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(
+                                              snapshot.data.castLabel,
+                                              style: TextStyle(
+                                                  color: Colors.grey[700],
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold
                                               ),
-                                              Text(
-                                                '${snapshot.data.productionCompaniesLabel}',
-                                                style: TextStyle(
-                                                    color: Color(0xff343a40),
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold
-                                                ),
-                                              )
-                                            ]
-                                        )
-                                    ),
-                                    SizedBox.fromSize(size: Size(20, 50)),
-                                    Align(
-                                      alignment: Alignment.bottomLeft,
-                                      child: Text(
-                                        'Diretor',
-                                        style: TextStyle(
-                                          color: Colors.blueGrey,
-                                          fontSize: 20,
+                                            )
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10),
-                                      child: Align(
-                                          alignment: Alignment.bottomLeft,
-                                          child: Text(
-                                            snapshot.data.directorLabel,
-                                            style: TextStyle(
-                                                color: Colors.grey[700],
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold
-                                            ),
-                                          )
-                                      ),
-                                    ),
-                                    SizedBox.fromSize(size: Size(20, 50)),
-                                    Align(
-                                      alignment: Alignment.bottomLeft,
-                                      child: Text(
-                                        'Elenco',
-                                        style: TextStyle(
-                                          color: Colors.blueGrey,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10),
-                                      child: Align(
-                                          alignment: Alignment.bottomLeft,
-                                          child: Text(
-                                            snapshot.data.castLabel,
-                                            style: TextStyle(
-                                                color: Colors.grey[700],
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold
-                                            ),
-                                          )
-                                      ),
-                                    ),
-                                    SizedBox.fromSize(size: Size(20, 50)),
-                                  ],
-                                )
-                            )
-                        )
-                    );
-                  }
-                  break;
-              }
+                                      SizedBox.fromSize(size: Size(20, 50)),
+                                    ],
+                                  )
+                              )
+                            ],
+                          )
+                      )
+                  );
+                }
+                break;
+            }
 
-              return result;
-            },
-          )
-      ),
+            return result;
+          },
+        )
     );
   }
 }
