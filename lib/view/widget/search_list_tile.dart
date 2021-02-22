@@ -14,9 +14,24 @@ class SearchListTile extends StatelessWidget {
     return ListTile(
       title: Stack(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.network(_posterBaseUrl + _movie.posterPath),
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.network(_posterBaseUrl + _movie.posterPath),
+              ),
+              Positioned(
+                bottom: 0,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.asset(
+                    'assets/img/poster_mask.png',
+                    width: MediaQuery.of(context).size.width * 0.87,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              )
+            ],
           ),
           Positioned(
               left: 20,

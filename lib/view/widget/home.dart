@@ -100,6 +100,7 @@ class _HomeState extends State<Home> {
       ),
       body: Container(
         color: Colors.white,
+        padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -114,18 +115,26 @@ class _HomeState extends State<Home> {
                     color: Color(0xff707880)
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Pesquise Filmes',
-                  filled: true,
-                  fillColor: Color(0xfff1f3f5),
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Color(0xfff1f3f5),
-                        width: 10,
-                        style: BorderStyle.solid
+                    hintText: 'Pesquise filmes',
+                    filled: true,
+                    fillColor: Color(0xfff1f3f5),
+                    prefixIcon: Icon(Icons.search, color: Colors.grey),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color(0xfff1f3f5),
+                          width: 10,
+                          style: BorderStyle.solid
+                      ),
+                      borderRadius: BorderRadius.circular(50),
                     ),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color(0xfff1f3f5),
+                          width: 0,
+                          style: BorderStyle.solid
+                      ),
+                      borderRadius: BorderRadius.circular(50),
+                    )
                 ),
                 onEditingComplete: () {
                   FocusScope.of(context).requestFocus(FocusNode());
