@@ -347,6 +347,7 @@ class Details extends StatelessWidget {
                                       ),
                                       SizedBox.fromSize(size: Size(20, 50)),
                                       Container(
+                                          width: MediaQuery.of(context).size.width,
                                           padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                                           decoration: BoxDecoration(
                                               color: Color(0xfff1f3f5),
@@ -355,30 +356,32 @@ class Details extends StatelessWidget {
                                               ),
                                               borderRadius: BorderRadius.all(Radius.circular(8))
                                           ),
-                                          child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                Text(
-                                                  'ORÇAMENTO: ',
-                                                  style: TextStyle(
-                                                      color: Color(0xff868e96),
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold
+                                          child: RichText(
+                                            text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: 'ORÇAMENTO: ',
+                                                    style: TextStyle(
+                                                        color: Color(0xff868e96),
+                                                        fontSize: 20,
+                                                        fontWeight: FontWeight.bold
+                                                    ),
                                                   ),
-                                                ),
-                                                Text(
-                                                  snapshot.data.budgetLabel,
-                                                  style: TextStyle(
-                                                      color: Color(0xff343a40),
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold
-                                                  ),
-                                                )
-                                              ]
+                                                  TextSpan(
+                                                    text: snapshot.data.budgetLabel,
+                                                    style: TextStyle(
+                                                        color: Color(0xff343a40),
+                                                        fontSize: 20,
+                                                        fontWeight: FontWeight.bold
+                                                    ),
+                                                  )
+                                                ]
+                                            ),
                                           )
                                       ),
                                       SizedBox.fromSize(size: Size(20, 5)),
                                       Container(
+                                        width: MediaQuery.of(context).size.width,
                                         padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                                         decoration: BoxDecoration(
                                             color: Color(0xfff1f3f5),
