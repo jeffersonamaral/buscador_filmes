@@ -6,6 +6,7 @@ import 'package:buscador_filmes/util/project_constants.dart';
 import 'package:buscador_filmes/util/route_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:toast/toast.dart';
 
 import 'search_list_tile.dart';
 
@@ -117,7 +118,19 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         _searching = false;
       });
     } else {
-      print('Request failed with status: ${response.statusCode}.');
+      Toast.show('Falha na requisição: ${response.statusCode}',
+          context,
+          duration: Toast.LENGTH_LONG,
+          gravity: Toast.BOTTOM
+      );
+
+      setState(() {
+        _moviesAction = List();
+        _moviesAdventure = List();
+        _moviesFantasy = List();
+        _moviesComedy = List();
+        _searching = false;
+      });
     }
   }
 
@@ -132,7 +145,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         _genres.add(Genre.fromMap(aux));
       }
     } else {
-      print('Request failed with status: ${response.statusCode}.');
+      Toast.show('Falha na requisição: ${response.statusCode}',
+          context,
+          duration: Toast.LENGTH_LONG,
+          gravity: Toast.BOTTOM
+      );
     }
   }
 
@@ -173,7 +190,19 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return apiKey == 'INSERIR_API_KEY_AQUI'
+        ? Container(
+      child: Center(
+        child: Text(
+          'O valor de \"apiKey\" em util/project_constants.dart deve ser alterado para uma apiKey válida antes de se iniciar o app.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 23,
+              color: Colors.red[900],
+          ),
+        ),
+      ),
+    ) : Scaffold(
       appBar: AppBar(
           title: Text('Filmes'),
           elevation: 0,

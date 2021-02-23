@@ -8,6 +8,7 @@ import 'package:buscador_filmes/util/project_constants.dart';
 import 'package:buscador_filmes/view/widget/please_wait.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:toast/toast.dart';
 
 import 'error_message.dart';
 
@@ -18,11 +19,11 @@ class Details extends StatelessWidget {
 
   Details(this._movie);
 
-  Future<Movie> _searchMovieDetails(Movie movie) async {
+  Future<Movie> _searchMovieDetails(Movie movie, BuildContext context) async {
     Movie detailedMovie;
 
     var url = '${searchDetailsUrl + movie.id.toString()}?api_key=$apiKey&language=pt-BR';
-    var response = await http.get(url);
+    var response = await http.get(url).timeout(const Duration(seconds: 2));
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
@@ -56,7 +57,7 @@ class Details extends StatelessWidget {
                 if (aux['type'] == 3) {
                   detailedMovie.theatricalReleaseDate = aux['release_date'];
 
-                  if (detailedMovie.theatricalReleaseDate != null && detailedMovie.theatricalReleaseDate?.isNotEmpty) {
+                  if (detailedMovie.theatricalReleaseDate != null && detailedMovie.theatricalReleaseDate.isNotEmpty) {
                     detailedMovie.theatricalReleaseDate = detailedMovie.theatricalReleaseDate.substring(0, 10);
                   }
 
@@ -66,13 +67,31 @@ class Details extends StatelessWidget {
             }
           }
         } else {
-          print('Request failed with status: ${responseReleaseDates.statusCode}.');
+          Toast.show('Falha na requisição: ${responseReleaseDates.statusCode}',
+              context,
+              duration: Toast.LENGTH_LONG,
+              gravity: Toast.BOTTOM
+          );
+
+          detailedMovie = null;
         }
       } else {
-        print('Request failed with status: ${responseCredits.statusCode}.');
+        Toast.show('Falha na requisição: ${responseCredits.statusCode}',
+            context,
+            duration: Toast.LENGTH_LONG,
+            gravity: Toast.BOTTOM
+        );
+
+        detailedMovie = null;
       }
     } else {
-      print('Request failed with status: ${response.statusCode}.');
+      Toast.show('Falha na requisição: ${response.statusCode}',
+          context,
+          duration: Toast.LENGTH_LONG,
+          gravity: Toast.BOTTOM
+      );
+
+      detailedMovie = null;
     }
 
     return detailedMovie;
@@ -130,7 +149,7 @@ class Details extends StatelessWidget {
             )),
         floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
         body: FutureBuilder<Movie>(
-          future: _searchMovieDetails(_movie),
+          future: _searchMovieDetails(_movie, context),
           builder: (context, snapshot) {
             Widget result;
 
@@ -146,7 +165,7 @@ class Details extends StatelessWidget {
                 if (snapshot.hasError) {
                   result = ErrorMessage();
                 } else {
-                  result = Container(
+                  result = snapshot.data == null ? ErrorMessage() : Container(
                       color: Colors.white,
                       width: MediaQuery.of(context).size.width,
                       child: SingleChildScrollView(

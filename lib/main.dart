@@ -5,12 +5,6 @@ import 'util/route_generator.dart';
 import 'view/widget/home.dart';
 
 void main() {
-  // debugPaintSizeEnabled = true;
-  // debugPaintPointersEnabled = true;
-  // debugPaintBaselinesEnabled = true;
-  // debugPaintLayerBordersEnabled = true;
-  // debugRepaintRainbowEnabled = true;
-
   runApp(
       MaterialApp(
           debugShowCheckedModeBanner: false,
