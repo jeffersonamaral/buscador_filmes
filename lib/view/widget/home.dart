@@ -27,6 +27,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   int _selectedTabIndex = 0;
 
+  bool _searching = false;
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +44,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   _search(String value) async {
+    setState(() {
+      _searching = true;
+    });
+
     _movies.clear();
 
     String url;
@@ -108,6 +114,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         _moviesAdventure = tempMoviesAdventure;
         _moviesFantasy = tempMoviesFantasy;
         _moviesComedy = tempMoviesComedy;
+        _searching = false;
       });
     } else {
       print('Request failed with status: ${response.statusCode}.');
@@ -223,6 +230,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
                 TabBar(
                   controller: _tabController,
+                  indicatorColor: Colors.white,
                   onTap: (index) {
                     setState(() {
                       _selectedTabIndex = index;
@@ -333,16 +341,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           Container(
             color: Colors.white,
             padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
-            child: Column(
+            child: _searching ? Center(child: CircularProgressIndicator()) : Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
-                    child: ListView.builder(
-                        itemCount: _moviesAction.length,
-                        itemBuilder: (context, index) {
-                          return _createListTile(context, index, 0);
-                        }
-                    )
+                    child: _moviesAction.isEmpty
+                        ? Center(child: Text('Nada encontrado :(', style: TextStyle(fontSize: 30),))
+                        : ListView.builder(
+                              itemCount: _moviesAction.length,
+                              itemBuilder: (context, index) {
+                                return _createListTile(context, index, 0);
+                              }
+                          )
                 )
               ],
             ),
@@ -350,11 +360,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           Container(
             color: Colors.white,
             padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
-            child: Column(
+            child: _searching ? Center(child: CircularProgressIndicator()) : Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
-                    child: ListView.builder(
+                    child: _moviesAdventure.isEmpty
+                        ? Center(child: Text('Nada encontrado :(', style: TextStyle(fontSize: 30),))
+                        : ListView.builder(
                         itemCount: _moviesAdventure.length,
                         itemBuilder: (context, index) {
                           return _createListTile(context, index, 1);
@@ -367,11 +379,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           Container(
             color: Colors.white,
             padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
-            child: Column(
+            child: _searching ? Center(child: CircularProgressIndicator()) : Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
-                    child: ListView.builder(
+                    child: _moviesFantasy.isEmpty
+                        ? Center(child: Text('Nada encontrado :(', style: TextStyle(fontSize: 30),))
+                        : ListView.builder(
                         itemCount: _moviesFantasy.length,
                         itemBuilder: (context, index) {
                           return _createListTile(context, index, 2);
@@ -384,11 +398,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           Container(
             color: Colors.white,
             padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
-            child: Column(
+            child: _searching ? Center(child: CircularProgressIndicator()) : Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
-                    child: ListView.builder(
+                    child: _moviesComedy.isEmpty
+                        ? Center(child: Text('Nada encontrado :(', style: TextStyle(fontSize: 30),))
+                        : ListView.builder(
                         itemCount: _moviesComedy.length,
                         itemBuilder: (context, index) {
                           return _createListTile(context, index, 3);
