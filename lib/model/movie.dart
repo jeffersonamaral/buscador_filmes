@@ -122,11 +122,11 @@ class Movie {
     String label = '';
 
     for (ProductionCompany productionCompany in _productionCompanies) {
-      label += '${productionCompany.name} - ';
+      label += '${productionCompany.name}, ';
     }
 
     if (label.isNotEmpty) {
-      label = label.substring(0, (label.length - 1) - 2);
+      label = label.substring(0, (label.length - 1) - 1);
     }
 
     return label;

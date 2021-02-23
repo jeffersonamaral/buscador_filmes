@@ -153,7 +153,7 @@ class Details extends StatelessWidget {
                           child: Stack(
                             children: [
                               Image.asset(
-                                  'assets/img/details_background.png',
+                                'assets/img/details_background.png',
                                 fit: BoxFit.fill,
                                 width: MediaQuery.of(context).size.width,
                                 height: MediaQuery.of(context).size.height * 0.4,
@@ -181,9 +181,9 @@ class Details extends StatelessWidget {
                                               child: Align(
                                                 alignment: Alignment.bottomCenter,
                                                 child: Text(
-                                                    snapshot.data.theatricalReleaseDateLabel != null
-                                                        ? '${snapshot.data.theatricalReleaseDateLabel.toUpperCase()} NOS CINEMAS'
-                                                        : '',
+                                                  snapshot.data.theatricalReleaseDateLabel != null
+                                                      ? '${snapshot.data.theatricalReleaseDateLabel.toUpperCase()} NOS CINEMAS'
+                                                      : '',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                       color: Colors.yellow,
@@ -330,20 +330,20 @@ class Details extends StatelessWidget {
                                         ),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(top: 10),
-                                        child: Align(
-                                          alignment: Alignment.bottomLeft,
-                                          child: Text(
-                                            snapshot.data.overview != null && snapshot.data.overview.isNotEmpty
-                                                ? snapshot.data.overview
-                                                : 'Indisponível',
-                                            style: TextStyle(
-                                                color: Colors.grey[700],
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold
-                                            ),
+                                          padding: EdgeInsets.only(top: 10),
+                                          child: Align(
+                                              alignment: Alignment.bottomLeft,
+                                              child: Text(
+                                                snapshot.data.overview != null && snapshot.data.overview.isNotEmpty
+                                                    ? snapshot.data.overview
+                                                    : 'Indisponível',
+                                                style: TextStyle(
+                                                    color: Colors.grey[700],
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold
+                                                ),
+                                              )
                                           )
-                                        )
                                       ),
                                       SizedBox.fromSize(size: Size(20, 50)),
                                       Container(
@@ -379,27 +379,27 @@ class Details extends StatelessWidget {
                                       ),
                                       SizedBox.fromSize(size: Size(20, 5)),
                                       Container(
-                                          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                                          decoration: BoxDecoration(
+                                        padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                        decoration: BoxDecoration(
+                                            color: Color(0xfff1f3f5),
+                                            border: Border.all(
                                               color: Color(0xfff1f3f5),
-                                              border: Border.all(
-                                                color: Color(0xfff1f3f5),
-                                              ),
-                                              borderRadius: BorderRadius.all(Radius.circular(8))
-                                          ),
-                                          child: Row(
-                                              mainAxisSize: MainAxisSize.max,
+                                            ),
+                                            borderRadius: BorderRadius.all(Radius.circular(8))
+                                        ),
+                                        child: RichText(
+                                          text: TextSpan(
                                               children: [
-                                                Text(
-                                                  'PRODUTORAS: ',
+                                                TextSpan(
+                                                  text: 'PRODUTORAS: ',
                                                   style: TextStyle(
                                                       color: Color(0xff868e96),
                                                       fontSize: 20,
                                                       fontWeight: FontWeight.bold
                                                   ),
                                                 ),
-                                                Text(
-                                                  '${snapshot.data.productionCompaniesLabel}',
+                                                TextSpan(
+                                                  text: '${snapshot.data.productionCompaniesLabel}',
                                                   style: TextStyle(
                                                       color: Color(0xff343a40),
                                                       fontSize: 20,
@@ -407,7 +407,8 @@ class Details extends StatelessWidget {
                                                   ),
                                                 )
                                               ]
-                                          )
+                                          ),
+                                        ),
                                       ),
                                       SizedBox.fromSize(size: Size(20, 50)),
                                       Align(
