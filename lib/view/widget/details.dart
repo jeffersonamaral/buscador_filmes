@@ -98,7 +98,7 @@ class Details extends StatelessWidget {
   }
 
   List<Widget> _createGenresRow(Movie movie) {
-    List<Widget> widgets = List<Widget>();
+    List<Widget> widgets = [];
 
     for (Genre genre in movie.genres) {
       widgets.add(
