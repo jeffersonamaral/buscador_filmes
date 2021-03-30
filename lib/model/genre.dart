@@ -5,13 +5,10 @@ class Genre {
 
   Genre(this._id, this._name);
 
-  Genre.fromMap(Map<String, dynamic> map) {
-    this._id = map['id'];
-    this._name = map['name'];
-  }
+  Genre.fromMap(Map<String, dynamic> map) : this(map['id'], map['name']);
 
-  String get name => _name;
+  String? get name => _name;
 
-  int get id => _id;
+  int? get id => _id;
 
 }

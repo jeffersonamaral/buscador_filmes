@@ -2,6 +2,7 @@ import 'package:buscador_filmes/view/widget/details.dart';
 import 'package:flutter/material.dart';
 
 import '../view/widget/home.dart';
+import '../model/movie.dart';
 
 /*
  * Jefferson Amaral da Silva
@@ -25,7 +26,7 @@ class RouteGenerator {
       case details:
         return MaterialPageRoute(
             builder: (BuildContext context) {
-              return Details(settings.arguments);
+              return Details(settings.arguments as Movie);
             }
         );
 

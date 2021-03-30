@@ -5,8 +5,8 @@ import 'package:buscador_filmes/model/movie.dart';
 import 'package:buscador_filmes/util/project_constants.dart';
 import 'package:buscador_filmes/util/route_generator.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:toast/toast.dart';
 
 import 'search_list_tile.dart';
 
@@ -16,15 +16,15 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
   TextEditingController _controllerSearch = TextEditingController();
-  List<Genre> _genres = List();
-  List<Movie> _movies = List();
+  List<Genre> _genres = [];
+  List<Movie> _movies = [];
 
-  List<Movie> _moviesAction = List();
-  List<Movie> _moviesAdventure = List();
-  List<Movie> _moviesFantasy = List();
-  List<Movie> _moviesComedy = List();
+  List<Movie> _moviesAction = [];
+  List<Movie> _moviesAdventure = [];
+  List<Movie> _moviesFantasy = [];
+  List<Movie> _moviesComedy = [];
 
   int _selectedTabIndex = 0;
 
@@ -44,7 +44,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _search(null);
   }
 
-  _search(String value) async {
+  _search(String? value) async {
     setState(() {
       _searching = true;
     });
@@ -59,15 +59,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       url = searchMoviesbyGenreUrl;
     }
 
-    var response = await http.get(url);
+    var response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       Movie movie;
-      List<Movie> tempMovies = List();
-      List<Movie> tempMoviesAction = List();
-      List<Movie> tempMoviesAdventure = List();
-      List<Movie> tempMoviesFantasy = List();
-      List<Movie> tempMoviesComedy = List();
+      List<Movie> tempMovies = [];
+      List<Movie> tempMoviesAction = [];
+      List<Movie> tempMoviesAdventure = [];
+      List<Movie> tempMoviesFantasy = [];
+      List<Movie> tempMoviesComedy = [];
 
       var jsonResponse = json.decode(response.body);
 
@@ -78,7 +78,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           for (int genreId in mapMovie['genre_ids']) {
             for (Genre genre in _genres) {
               if (genre.id == genreId) {
-                movie.genres.add(genre);
+                movie.genres!.add(genre);
                 break;
               }
             }
@@ -91,7 +91,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       _movies = tempMovies;
 
       for (Movie auxMovie in _movies) {
-        for (Genre auxGenre in auxMovie.genres) {
+        for (Genre auxGenre in auxMovie.genres!) {
           if (auxGenre.id == 28) {
             tempMoviesAction.add(auxMovie);
           }
@@ -118,17 +118,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         _searching = false;
       });
     } else {
-      Toast.show('Falha na requisição: ${response.statusCode}',
-          context,
-          duration: Toast.LENGTH_LONG,
-          gravity: Toast.BOTTOM
+      Fluttertoast.showToast(
+          msg: 'Falha na requisição: ${response.statusCode}',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER
       );
 
       setState(() {
-        _moviesAction = List();
-        _moviesAdventure = List();
-        _moviesFantasy = List();
-        _moviesComedy = List();
+        _moviesAction = [];
+        _moviesAdventure = [];
+        _moviesFantasy = [];
+        _moviesComedy = [];
         _searching = false;
       });
     }
@@ -136,7 +136,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   void _searchGenres() async {
     var url = searchGenresUrl;
-    var response = await http.get(url);
+    var response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
@@ -145,16 +145,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         _genres.add(Genre.fromMap(aux));
       }
     } else {
-      Toast.show('Falha na requisição: ${response.statusCode}',
-          context,
-          duration: Toast.LENGTH_LONG,
-          gravity: Toast.BOTTOM
+      Fluttertoast.showToast(
+          msg: 'Falha na requisição: ${response.statusCode}',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER
       );
     }
   }
 
   Widget _createListTile(BuildContext context, int index, int tab) {
-    List<Movie> tempList;
+    late List<Movie> tempList;
 
     switch (tab) {
       case 0:

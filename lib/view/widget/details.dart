@@ -7,22 +7,22 @@ import 'package:buscador_filmes/model/movie.dart';
 import 'package:buscador_filmes/util/project_constants.dart';
 import 'package:buscador_filmes/view/widget/please_wait.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:toast/toast.dart';
 
 import 'error_message.dart';
 
 const _posterBaseUrl = 'https://image.tmdb.org/t/p/original/';
 
 class Details extends StatelessWidget {
-  final Movie _movie;
+  final Movie? _movie;
 
   Details(this._movie);
 
-  Future<Movie> _searchMovieDetails(Movie movie, BuildContext context) async {
-    Movie detailedMovie;
+  Future<Movie?> _searchMovieDetails(Movie movie, BuildContext context) async {
+    Movie? detailedMovie;
 
-    var url = '${searchDetailsUrl + movie.id.toString()}?api_key=$apiKey&language=pt-BR';
+    var url = Uri.parse('${searchDetailsUrl + movie.id.toString()}?api_key=$apiKey&language=pt-BR');
     var response = await http.get(url).timeout(const Duration(seconds: 2));
 
     if (response.statusCode == 200) {
@@ -30,21 +30,21 @@ class Details extends StatelessWidget {
 
       detailedMovie = Movie.fromMap(jsonResponse);
 
-      var urlCredits = '${searchCreditsUrl + movie.id.toString()}/credits?api_key=$apiKey';
+      var urlCredits = Uri.parse('${searchCreditsUrl + movie.id.toString()}/credits?api_key=$apiKey');
       var responseCredits = await http.get(urlCredits);
 
       if (responseCredits.statusCode == 200) {
         var jsonResponseCredits = json.decode(responseCredits.body);
 
         for (Map<String, dynamic> auxCast in jsonResponseCredits['cast']) {
-          detailedMovie.cast.add(Cast.fromMap(auxCast));
+          detailedMovie.cast!.add(Cast.fromMap(auxCast));
         }
 
         for (Map<String, dynamic> auxCrew in jsonResponseCredits['crew']) {
-          detailedMovie.crew.add(Crew.fromMap(auxCrew));
+          detailedMovie.crew!.add(Crew.fromMap(auxCrew));
         }
 
-        var urlReleaseDates = '${searchCreditsUrl + movie.id.toString()}/release_dates?api_key=$apiKey';
+        var urlReleaseDates = Uri.parse('${searchCreditsUrl + movie.id.toString()}/release_dates?api_key=$apiKey');
         var responseReleaseDates = await http.get(urlReleaseDates);
 
         if (responseReleaseDates.statusCode == 200) {
@@ -57,8 +57,8 @@ class Details extends StatelessWidget {
                 if (aux['type'] == 3) {
                   detailedMovie.theatricalReleaseDate = aux['release_date'];
 
-                  if (detailedMovie.theatricalReleaseDate != null && detailedMovie.theatricalReleaseDate.isNotEmpty) {
-                    detailedMovie.theatricalReleaseDate = detailedMovie.theatricalReleaseDate.substring(0, 10);
+                  if (detailedMovie.theatricalReleaseDate != null && detailedMovie.theatricalReleaseDate!.isNotEmpty) {
+                    detailedMovie.theatricalReleaseDate = detailedMovie.theatricalReleaseDate!.substring(0, 10);
                   }
 
                   break;
@@ -67,28 +67,28 @@ class Details extends StatelessWidget {
             }
           }
         } else {
-          Toast.show('Falha na requisição: ${responseReleaseDates.statusCode}',
-              context,
-              duration: Toast.LENGTH_LONG,
-              gravity: Toast.BOTTOM
+          Fluttertoast.showToast(
+              msg: 'Falha na requisição: ${responseReleaseDates.statusCode}',
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.CENTER
           );
 
           detailedMovie = null;
         }
       } else {
-        Toast.show('Falha na requisição: ${responseCredits.statusCode}',
-            context,
-            duration: Toast.LENGTH_LONG,
-            gravity: Toast.BOTTOM
+        Fluttertoast.showToast(
+            msg: 'Falha na requisição: ${responseCredits.statusCode}',
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER
         );
 
         detailedMovie = null;
       }
     } else {
-      Toast.show('Falha na requisição: ${response.statusCode}',
-          context,
-          duration: Toast.LENGTH_LONG,
-          gravity: Toast.BOTTOM
+      Fluttertoast.showToast(
+          msg: 'Falha na requisição: ${response.statusCode}',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER
       );
 
       detailedMovie = null;
@@ -100,7 +100,7 @@ class Details extends StatelessWidget {
   List<Widget> _createGenresRow(Movie movie) {
     List<Widget> widgets = [];
 
-    for (Genre genre in movie.genres) {
+    for (Genre genre in movie.genres!) {
       widgets.add(
           Container(
               padding: EdgeInsets.fromLTRB(20, 8, 20, 8),
@@ -112,7 +112,7 @@ class Details extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(8))
               ),
               child: Text(
-                genre.name.toUpperCase(),
+                genre.name!.toUpperCase(),
                 style: TextStyle(
                     color: Color(0xff5e6770),
                     fontSize: 20,
@@ -148,10 +148,10 @@ class Details extends StatelessWidget {
               ),
             )),
         floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-        body: FutureBuilder<Movie>(
-          future: _searchMovieDetails(_movie, context),
+        body: FutureBuilder<Movie?>(
+          future: _searchMovieDetails(_movie!, context),
           builder: (context, snapshot) {
-            Widget result;
+            late Widget result;
 
             switch (snapshot.connectionState){
               case ConnectionState.none:
@@ -189,7 +189,7 @@ class Details extends StatelessWidget {
                                               child: ClipRRect(
                                                 borderRadius: BorderRadius.circular(16),
                                                 child: Image.network(
-                                                  _posterBaseUrl + snapshot.data.posterPath,
+                                                  _posterBaseUrl + snapshot.data!.posterPath!,
                                                   width: MediaQuery.of(context).size.width * 0.6,
                                                 ),
                                               )
@@ -200,8 +200,8 @@ class Details extends StatelessWidget {
                                               child: Align(
                                                 alignment: Alignment.bottomCenter,
                                                 child: Text(
-                                                  snapshot.data.theatricalReleaseDateLabel != null
-                                                      ? '${snapshot.data.theatricalReleaseDateLabel.toUpperCase()} NOS CINEMAS'
+                                                  snapshot.data!.theatricalReleaseDateLabel != null
+                                                      ? '${snapshot.data!.theatricalReleaseDateLabel!.toUpperCase()} NOS CINEMAS'
                                                       : '',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
@@ -218,10 +218,11 @@ class Details extends StatelessWidget {
                                         padding: EdgeInsets.only(top: 40, bottom: 40),
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.baseline,
+                                          textBaseline: TextBaseline.alphabetic,
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              snapshot.data.voteAverage,
+                                              snapshot.data!.voteAverage!,
                                               style: TextStyle(
                                                   color: Color(0xff00384c),
                                                   fontSize: 35,
@@ -240,7 +241,7 @@ class Details extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        snapshot.data.title.toUpperCase(),
+                                        snapshot.data!.title!.toUpperCase(),
                                         style: TextStyle(
                                             color: Color(0xff00384c),
                                             fontSize: 22,
@@ -251,7 +252,7 @@ class Details extends StatelessWidget {
                                       Padding(
                                           padding: EdgeInsets.only(top: 10, bottom: 40),
                                           child: Text(
-                                            'Título original: ${snapshot.data.originalTitle}',
+                                            'Título original: ${snapshot.data!.originalTitle}',
                                             style: TextStyle(
                                                 color: Colors.blueGrey,
                                                 fontSize: 16,
@@ -286,7 +287,7 @@ class Details extends StatelessWidget {
                                                   ),
                                                 ),
                                                 Text(
-                                                  snapshot.data.yearLabel,
+                                                  snapshot.data!.yearLabel,
                                                   style: TextStyle(
                                                       color: Color(0xff343a40),
                                                       fontSize: 20,
@@ -317,7 +318,7 @@ class Details extends StatelessWidget {
                                                   ),
                                                 ),
                                                 Text(
-                                                  snapshot.data.durationLabel,
+                                                  snapshot.data!.durationLabel,
                                                   style: TextStyle(
                                                       color: Color(0xff343a40),
                                                       fontSize: 20,
@@ -335,7 +336,7 @@ class Details extends StatelessWidget {
                                         spacing: 8,
                                         runSpacing: 8,
                                         alignment: WrapAlignment.spaceEvenly,
-                                        children: _createGenresRow(snapshot.data),
+                                        children: _createGenresRow(snapshot.data!),
                                       ),
                                       SizedBox.fromSize(size: Size(20, 75)),
                                       Align(
@@ -353,8 +354,8 @@ class Details extends StatelessWidget {
                                           child: Align(
                                               alignment: Alignment.bottomLeft,
                                               child: Text(
-                                                snapshot.data.overview != null && snapshot.data.overview.isNotEmpty
-                                                    ? snapshot.data.overview
+                                                snapshot.data!.overview != null && snapshot.data!.overview!.isNotEmpty
+                                                    ? snapshot.data!.overview!
                                                     : 'Indisponível',
                                                 style: TextStyle(
                                                     color: Colors.grey[700],
@@ -387,7 +388,7 @@ class Details extends StatelessWidget {
                                                     ),
                                                   ),
                                                   TextSpan(
-                                                    text: snapshot.data.budgetLabel,
+                                                    text: snapshot.data!.budgetLabel,
                                                     style: TextStyle(
                                                         color: Color(0xff343a40),
                                                         fontSize: 20,
@@ -421,7 +422,7 @@ class Details extends StatelessWidget {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: '${snapshot.data.productionCompaniesLabel}',
+                                                  text: '${snapshot.data!.productionCompaniesLabel}',
                                                   style: TextStyle(
                                                       color: Color(0xff343a40),
                                                       fontSize: 20,
@@ -448,7 +449,7 @@ class Details extends StatelessWidget {
                                         child: Align(
                                             alignment: Alignment.bottomLeft,
                                             child: Text(
-                                              snapshot.data.directorLabel,
+                                              snapshot.data!.directorLabel,
                                               style: TextStyle(
                                                   color: Colors.grey[700],
                                                   fontSize: 18,
@@ -473,7 +474,7 @@ class Details extends StatelessWidget {
                                         child: Align(
                                             alignment: Alignment.bottomLeft,
                                             child: Text(
-                                              snapshot.data.castLabel,
+                                              snapshot.data!.castLabel,
                                               style: TextStyle(
                                                   color: Colors.grey[700],
                                                   fontSize: 18,

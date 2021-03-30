@@ -7,7 +7,7 @@ class SearchListTile extends StatelessWidget {
 
   final Movie _movie;
 
-  SearchListTile({@required movie}) : this._movie = movie;
+  SearchListTile({required movie}) : this._movie = movie;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class SearchListTile extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.network(_posterBaseUrl + _movie.posterPath),
+                child: Image.network(_posterBaseUrl + _movie.posterPath!),
               ),
               Positioned(
                 bottom: 0,
@@ -42,7 +42,7 @@ class SearchListTile extends StatelessWidget {
                   Container(
                       padding: EdgeInsets.only(bottom: 15),
                       child: Text(
-                        _movie.title.toUpperCase(),
+                        _movie.title!.toUpperCase(),
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             color: Colors.white,

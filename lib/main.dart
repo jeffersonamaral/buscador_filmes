@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:device_preview/device_preview.dart';
 
 import 'util/route_generator.dart';
 import 'view/widget/home.dart';
 
 void main() {
   runApp(
-      MaterialApp(
+    DevicePreview(
+      builder: (_) => MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Buscador de Filmes',
           initialRoute: RouteGenerator.home,
@@ -14,9 +16,13 @@ void main() {
           theme: ThemeData(
             primaryColor: Colors.white,
             accentColor: Colors.blueGrey,
-            textSelectionColor: Colors.blue,
+            textSelectionTheme: TextSelectionThemeData(
+                selectionColor: Colors.blue
+            ),
           ),
           home: Home()
-      )
+      ),
+      enabled: true,
+    )
   );
 }

@@ -3,10 +3,9 @@ abstract class People {
 
   String _name;
 
-  People.fromMap(Map<String, dynamic> map) {
-    _id = map['id'];
-    _name = map['name'];
-  }
+  People._internal(this._id, this._name);
+
+  People.fromMap(Map<String, dynamic> map) : this._internal(map['id'], map['name']);
 
   String get name => _name;
 

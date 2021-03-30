@@ -1,7 +1,7 @@
 class ProductionCompany {
-  int _id;
+  int? _id;
 
-  String _name;
+  String? _name;
 
   ProductionCompany(this._id, this._name);
 
@@ -10,8 +10,8 @@ class ProductionCompany {
     this._name = map['name'];
   }
 
-  String get name => _name;
+  String? get name => _name;
 
-  int get id => _id;
+  int? get id => _id;
 
 }
