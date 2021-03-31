@@ -1,4 +1,4 @@
-const String apiKey = 'INSERIR_API_KEY_AQUI';
+const String apiKey = /*'INSERIR_API_KEY_AQUI';*/'23b53de489b329a894ceb74dc49f64c1';
 
 const String searchMoviesUrl = 'https://api.themoviedb.org/3/search/movie?api_key=$apiKey&language=pt-BR&query=';
 

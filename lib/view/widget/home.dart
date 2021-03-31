@@ -197,8 +197,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           'O valor de \"apiKey\" em util/project_constants.dart deve ser alterado para uma apiKey válida antes de se iniciar o app.',
           textAlign: TextAlign.center,
           style: TextStyle(
-              fontSize: 23,
-              color: Colors.red[900],
+            fontSize: 23,
+            color: Colors.red[900],
           ),
         ),
       ),
@@ -225,14 +225,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         filled: true,
                         fillColor: Color(0xfff1f3f5),
                         prefixIcon: Icon(Icons.search, color: Colors.grey),
-                        suffixIcon: _controllerSearch.text != null && _controllerSearch.text.isNotEmpty
+                        suffixIcon: _controllerSearch.text.isNotEmpty
                             ? IconButton(
-                                icon: Icon(Icons.close),
-                                onPressed: () {
-                                  _controllerSearch.clear();
-                                  _search(null);
-                                },
-                              )
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            _controllerSearch.clear();
+                            _search(null);
+                          },
+                        )
                             : null,
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -377,11 +377,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     child: _moviesAction.isEmpty
                         ? Center(child: Text('Nada encontrado :(', style: TextStyle(fontSize: 30),))
                         : ListView.builder(
-                              itemCount: _moviesAction.length,
-                              itemBuilder: (context, index) {
-                                return _createListTile(context, index, 0);
-                              }
-                          )
+                        itemCount: _moviesAction.length,
+                        itemBuilder: (context, index) {
+                          return _createListTile(context, index, 0);
+                        }
+                    )
                 )
               ],
             ),

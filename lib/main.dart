@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter/material.dart';
 
 import 'util/route_generator.dart';
 import 'view/widget/home.dart';
